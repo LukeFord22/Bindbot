@@ -41,7 +41,7 @@ echo "Installing conda packages"
 $pkg_manager install \
   pip pandas matplotlib 'numpy<2.0.0' biopython scipy pdbfixer seaborn libgfortran5 tqdm \
   jupyter jupyterlab ipywidgets ffmpeg fsspec py3dmol psutil copyparty \
-  -c conda-forge -y \
+  nodejs -c conda-forge -y \
 || { echo "Error: Failed to install conda packages"; exit 1; }
 
 echo "Installing JAX/ML conda packages"
