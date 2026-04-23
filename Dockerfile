@@ -7,9 +7,9 @@ FROM nvcr.io/nvidia/jax:23.08-py3
 #For A100 with cuda 11.8 use: 
 #FROM nvcr.io/nvidia/jax:23.08-cuda11.8-py3
 
-LABEL org.opencontainers.image.source="https://github.com/A-Yarrow/bindcraft-runpod.git"
+LABEL org.opencontainers.image.source="https://github.com/LukeFord22/Bindbot.git"
 LABEL org.opencontainers.image.description="BINDCRAFT GPU with Jupyter GUI"
-LABEL maintainer="Yarrow Madrona <yarrowmadrona@gmail.com>"
+LABEL maintainer="Luke Ford <lhford1213@gmail.com>"
 
 RUN apt-get update && apt-get install -y \
     wget \
@@ -33,7 +33,7 @@ RUN conda install -y -n base -c conda-forge mamba && \
     conda clean -afy
 
 # 7-8 Clone BindCraft repository
-RUN git clone --branch dev --single-branch https://github.com/A-Yarrow/bindcraft-runpod.git /app/bindcraft
+RUN git clone --branch main --single-branch https://github.com/LukeFord22/Bindbot.git /app/bindcraft
 
 WORKDIR /app/bindcraft
 # 9 Install BindCraft (no PyRosetta or weights)
