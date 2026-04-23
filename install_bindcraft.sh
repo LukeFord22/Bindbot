@@ -34,13 +34,18 @@ echo "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
 ############################################################################################################
 ################## Install conda requirements
 echo "Installing conda packages"
+# Split into two steps to avoid dependency conflicts
 $pkg_manager install \
   pip pandas matplotlib 'numpy<2.0.0' biopython scipy pdbfixer seaborn libgfortran5 tqdm \
-  jupyter jupyterlab=4.4.7 ipywidgets=7.7.2 ffmpeg fsspec py3dmol \
-  chex dm-haiku 'flax<0.10.0' dm-tree joblib ml-collections immutabledict optax \
-  psutil copyparty \
+  jupyter jupyterlab ipywidgets ffmpeg fsspec py3dmol psutil copyparty \
   -c conda-forge -y \
 || { echo "Error: Failed to install conda packages"; exit 1; }
+
+echo "Installing JAX/ML conda packages"
+$pkg_manager install \
+  chex dm-haiku dm-tree joblib ml-collections immutabledict optax \
+  -c conda-forge -y \
+|| { echo "Error: Failed to install ML packages"; exit 1; }
 
 
 # ===============================
