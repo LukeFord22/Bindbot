@@ -33,6 +33,9 @@ echo "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
 
 ############################################################################################################
 ################## Install conda requirements
+echo "Removing problematic conda channels"
+conda config --env --remove channels https://conda.graylab.jhu.edu 2>/dev/null || true
+
 echo "Installing conda packages"
 # Split into two steps to avoid dependency conflicts
 $pkg_manager install \
