@@ -6,7 +6,7 @@ WORKSPACE_DIR="/workspace"
 NOTEBOOK_SRC="$BINDCRAFT_DIR/bindcraft-runpod-start.ipynb"
 NOTEBOOK_DEST="$WORKSPACE_DIR/bindcraft-runpod-start.ipynb"
 
-PYROSETTA_PACKAGE_URL="https://conda.graylab.jhu.edu/linux-64/pyrosetta-2025.03+release.1f5080a079-py310_0.tar.bz2"
+PYROSETTA_PACKAGE_URL="https://conda.rosettacommons.org/linux-64/rosetta-2025.03+release.1f5080a079-0.tar.bz2"
 PYROSETTA_PACKAGE_NAME=$(basename "$PYROSETTA_PACKAGE_URL")
 PYROSETTA_PACKAGE_DIR="$BINDCRAFT_DIR/packages/pyrosetta"
 PYROSETTA_PACKAGE_PATH="$PYROSETTA_PACKAGE_DIR/$PYROSETTA_PACKAGE_NAME"
