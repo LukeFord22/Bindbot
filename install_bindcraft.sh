@@ -100,15 +100,25 @@ cd "$PYROSETTA_TEMP_DIR"
 echo "Downloading PyRosetta package..."
 wget -O "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_PACKAGE_URL" || { echo "Error: Failed to download PyRosetta"; exit 1; }
 
+echo "Current conda environment: $CONDA_DEFAULT_ENV"
+echo "Python location: $(which python)"
+
 echo "Installing PyRosetta package using mamba --offline..."
-$pkg_manager install -y "$PYROSETTA_TEMP_DIR/$PYROSETTA_PACKAGE_NAME" --offline || {
+# Disable safety checks for local package and ensure it installs to the active environment
+CONDA_SAFETY_CHECKS=disabled $pkg_manager install -y --name BindCraft "$PYROSETTA_TEMP_DIR/$PYROSETTA_PACKAGE_NAME" --offline || {
     echo "Error: Failed to install PyRosetta"
     exit 1
 }
 
 echo "Verifying PyRosetta installation..."
-python -c "import pyrosetta; pyrosetta.init()" || {
+echo "Checking installed packages:"
+conda list | grep -i rosetta || echo "Rosetta not found in conda list"
+
+python -c "import sys; print('Python path:', sys.executable)"
+python -c "import pyrosetta; pyrosetta.init(); print('PyRosetta successfully imported and initialized!')" || {
     echo "Error: PyRosetta not importable after installation"
+    echo "Python site-packages:"
+    python -c "import site; print(site.getsitepackages())"
     exit 1
 }
 
