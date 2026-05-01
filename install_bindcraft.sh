@@ -93,7 +93,6 @@ echo "Installing PyRosetta from direct package URL"
 PYROSETTA_PACKAGE_URL="https://conda.rosettacommons.org/linux-64/rosetta-2025.03+release.1f5080a079-0.tar.bz2"
 PYROSETTA_PACKAGE_NAME=$(basename "$PYROSETTA_PACKAGE_URL")
 PYROSETTA_TEMP_DIR="/tmp/pyrosetta_install"
-CONDA_ENV_PATH="${CONDA_BASE}/envs/BindCraft"
 
 mkdir -p "$PYROSETTA_TEMP_DIR"
 cd "$PYROSETTA_TEMP_DIR"
@@ -101,11 +100,28 @@ cd "$PYROSETTA_TEMP_DIR"
 echo "Downloading PyRosetta package..."
 wget -O "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_PACKAGE_URL" || { echo "Error: Failed to download PyRosetta"; exit 1; }
 
-echo "Extracting PyRosetta directly into conda environment..."
-tar -xjf "$PYROSETTA_PACKAGE_NAME" -C "$CONDA_ENV_PATH" || { echo "Error: Failed to extract PyRosetta"; exit 1; }
+echo "Installing PyRosetta package using conda..."
+# Use conda/mamba's internal package installation mechanism
+conda package -w "$PYROSETTA_PACKAGE_NAME" || {
+    echo "Package validation not available, proceeding with manual extraction..."
+}
+
+# Extract to a temporary location to examine structure
+mkdir -p extracted
+tar -xjf "$PYROSETTA_PACKAGE_NAME" -C extracted/
+
+# Copy all contents to the conda environment
+echo "Copying PyRosetta files to conda environment..."
+cp -r extracted/* "${CONDA_BASE}/envs/BindCraft/" || { echo "Error: Failed to copy PyRosetta files"; exit 1; }
 
 # Verify installation
-python -c "import pyrosetta" || { echo "Error: PyRosetta not importable after installation"; exit 1; }
+echo "Verifying PyRosetta installation..."
+python -c "import pyrosetta; print('PyRosetta version:', pyrosetta.__version__ if hasattr(pyrosetta, '__version__') else 'imported successfully')" || {
+    echo "Error: PyRosetta not importable after installation"
+    echo "Checking what was extracted:"
+    ls -la extracted/
+    exit 1
+}
 
 cd "$install_dir"
 rm -rf "$PYROSETTA_TEMP_DIR"
