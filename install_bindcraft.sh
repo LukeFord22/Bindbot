@@ -90,7 +90,7 @@ python -m pip install nvidia-ml-py3
 ############################################################################################################
 ################## Install PyRosetta
 echo "Installing PyRosetta from direct package URL"
-PYROSETTA_PACKAGE_URL="https://conda.rosettacommons.org/linux-64/rosetta-2025.03+release.1f5080a079-0.tar.bz2"
+PYROSETTA_PACKAGE_URL="https://conda.graylab.jhu.edu/linux-64/pyrosetta-2025.03+release.1f5080a079-py310_0.tar.bz2"
 PYROSETTA_PACKAGE_NAME=$(basename "$PYROSETTA_PACKAGE_URL")
 PYROSETTA_TEMP_DIR="/tmp/pyrosetta_install"
 
@@ -100,25 +100,15 @@ cd "$PYROSETTA_TEMP_DIR"
 echo "Downloading PyRosetta package..."
 wget -O "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_PACKAGE_URL" || { echo "Error: Failed to download PyRosetta"; exit 1; }
 
-echo "Current conda environment: $CONDA_DEFAULT_ENV"
-echo "Python location: $(which python)"
-
 echo "Installing PyRosetta package using mamba --offline..."
-# Disable safety checks for local package and ensure it installs to the active environment
-CONDA_SAFETY_CHECKS=disabled $pkg_manager install -y --name BindCraft "$PYROSETTA_TEMP_DIR/$PYROSETTA_PACKAGE_NAME" --offline || {
+$pkg_manager install -y "$PYROSETTA_TEMP_DIR/$PYROSETTA_PACKAGE_NAME" --offline || {
     echo "Error: Failed to install PyRosetta"
     exit 1
 }
 
 echo "Verifying PyRosetta installation..."
-echo "Checking installed packages:"
-conda list | grep -i rosetta || echo "Rosetta not found in conda list"
-
-python -c "import sys; print('Python path:', sys.executable)"
-python -c "import pyrosetta; pyrosetta.init(); print('PyRosetta successfully imported and initialized!')" || {
+python -c "import pyrosetta; pyrosetta.init()" || {
     echo "Error: PyRosetta not importable after installation"
-    echo "Python site-packages:"
-    python -c "import site; print(site.getsitepackages())"
     exit 1
 }
 
