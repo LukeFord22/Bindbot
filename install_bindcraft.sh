@@ -34,12 +34,17 @@ echo "BindCraft environment activated at ${CONDA_BASE}/envs/BindCraft"
 ############################################################################################################
 ################## Install conda requirements
 echo "Installing conda packages"
+
+# Clear conda/mamba cache to avoid stale channel data
+echo "Clearing conda/mamba cache"
+$pkg_manager clean --all -y
+
 $pkg_manager install \
   pip pandas matplotlib 'numpy<2.0.0' biopython scipy pdbfixer seaborn libgfortran5 tqdm \
   jupyter jupyterlab=4.4.7 ipywidgets=7.7.2 ffmpeg pyrosetta fsspec py3dmol \
   chex dm-haiku 'flax<0.10.0' dm-tree joblib ml-collections immutabledict optax \
   psutil copyparty \
-  -c conda-forge --channel https://conda.rosettacommons.org -y \
+  -c conda-forge -c https://conda.rosettacommons.org -y \
 || { echo "Error: Failed to install conda packages"; exit 1; }
 
 
