@@ -92,12 +92,20 @@ python -m pip install nvidia-ml-py3
 echo "Installing PyRosetta from direct package URL"
 PYROSETTA_PACKAGE_URL="https://conda.rosettacommons.org/linux-64/rosetta-2025.03+release.1f5080a079-0.tar.bz2"
 PYROSETTA_PACKAGE_NAME=$(basename "$PYROSETTA_PACKAGE_URL")
-mkdir -p /tmp/pyrosetta_install
-cd /tmp/pyrosetta_install
+PYROSETTA_TEMP_DIR="/tmp/pyrosetta_install"
+mkdir -p "$PYROSETTA_TEMP_DIR"
+cd "$PYROSETTA_TEMP_DIR"
 wget -O "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_PACKAGE_URL" || { echo "Error: Failed to download PyRosetta"; exit 1; }
-$pkg_manager install -y "$PYROSETTA_PACKAGE_NAME" || { echo "Error: Failed to install PyRosetta"; exit 1; }
+# Create a local conda channel structure
+PYROSETTA_LOCAL_CHANNEL="/tmp/local_conda_channel/linux-64"
+mkdir -p "$PYROSETTA_LOCAL_CHANNEL"
+mv "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_LOCAL_CHANNEL/"
+# Index the local channel (creates repodata.json)
+conda index "/tmp/local_conda_channel" || { echo "Error: Failed to index local channel"; exit 1; }
+# Install from local channel
+$pkg_manager install -y -c "file:///tmp/local_conda_channel" rosetta || { echo "Error: Failed to install PyRosetta"; exit 1; }
 cd "$install_dir"
-rm -rf /tmp/pyrosetta_install
+rm -rf "/tmp/local_conda_channel" "$PYROSETTA_TEMP_DIR"
 echo "PyRosetta installation complete"
 
 ############################################################################################################
