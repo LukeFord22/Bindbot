@@ -39,7 +39,7 @@ $pkg_manager install \
   jupyter jupyterlab=4.4.7 ipywidgets=7.7.2 ffmpeg pyrosetta fsspec py3dmol \
   chex dm-haiku 'flax<0.10.0' dm-tree joblib ml-collections immutabledict optax \
   psutil copyparty \
-  -c conda-forge --channel https://conda.graylab.jhu.edu -y \
+  -c conda-forge --channel https://conda.rosettacommons.org -y \
 || { echo "Error: Failed to install conda packages"; exit 1; }
 
 
