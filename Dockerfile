@@ -36,7 +36,7 @@ RUN conda install -y -n base -c conda-forge mamba && \
 RUN git clone --branch main --single-branch https://github.com/LukeFord22/Bindbot.git /app/bindcraft
 
 WORKDIR /app/bindcraft
-# 9 Install BindCraft (no PyRosetta or weights)
+# 9 Install BindCraft (no weights)
 RUN chmod +x install_bindcraft.sh && \
     bash install_bindcraft.sh 
 
