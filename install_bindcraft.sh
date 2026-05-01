@@ -100,26 +100,15 @@ cd "$PYROSETTA_TEMP_DIR"
 echo "Downloading PyRosetta package..."
 wget -O "$PYROSETTA_PACKAGE_NAME" "$PYROSETTA_PACKAGE_URL" || { echo "Error: Failed to download PyRosetta"; exit 1; }
 
-echo "Installing PyRosetta package using conda..."
-# Use conda/mamba's internal package installation mechanism
-conda package -w "$PYROSETTA_PACKAGE_NAME" || {
-    echo "Package validation not available, proceeding with manual extraction..."
+echo "Installing PyRosetta package using mamba --offline..."
+$pkg_manager install -y "$PYROSETTA_TEMP_DIR/$PYROSETTA_PACKAGE_NAME" --offline || {
+    echo "Error: Failed to install PyRosetta"
+    exit 1
 }
 
-# Extract to a temporary location to examine structure
-mkdir -p extracted
-tar -xjf "$PYROSETTA_PACKAGE_NAME" -C extracted/
-
-# Copy all contents to the conda environment
-echo "Copying PyRosetta files to conda environment..."
-cp -r extracted/* "${CONDA_BASE}/envs/BindCraft/" || { echo "Error: Failed to copy PyRosetta files"; exit 1; }
-
-# Verify installation
 echo "Verifying PyRosetta installation..."
-python -c "import pyrosetta; print('PyRosetta version:', pyrosetta.__version__ if hasattr(pyrosetta, '__version__') else 'imported successfully')" || {
+python -c "import pyrosetta; pyrosetta.init()" || {
     echo "Error: PyRosetta not importable after installation"
-    echo "Checking what was extracted:"
-    ls -la extracted/
     exit 1
 }
 
