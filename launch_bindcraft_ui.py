@@ -1,6 +1,6 @@
 import sys
 import os
-DEV_DIR = '/home/yarrow/projects/bindcraft-runpod/functions/'
+DEV_DIR = ''
 PROD_DIR = '/app/bindcraft/functions'
 
 path_used = DEV_DIR if os.path.exists(DEV_DIR) else PROD_DIR

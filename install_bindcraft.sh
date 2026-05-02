@@ -37,12 +37,17 @@ echo "Removing problematic conda channels"
 conda config --env --remove channels https://conda.graylab.jhu.edu 2>/dev/null || true
 
 echo "Installing conda packages"
-# Split into two steps to avoid dependency conflicts
+# Split into steps to avoid dependency conflicts
+
 $pkg_manager install \
   pip pandas matplotlib 'numpy<2.0.0' biopython scipy pdbfixer seaborn libgfortran5 tqdm \
-  jupyter jupyterlab ipywidgets ffmpeg fsspec py3dmol psutil copyparty \
-  nodejs -c conda-forge -y \
+  jupyter jupyterlab ipywidgets fsspec py3dmol psutil copyparty nodejs \
+  -c conda-forge -y \
 || { echo "Error: Failed to install conda packages"; exit 1; }
+
+echo "Installing ffmpeg with codec support"
+$pkg_manager install -y "ffmpeg>=4.3" x264 openh264 -c conda-forge \
+|| { echo "Error: Failed to install ffmpeg"; exit 1; }
 
 echo "Installing JAX/ML conda packages"
 $pkg_manager install \
