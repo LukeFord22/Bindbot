@@ -26,7 +26,7 @@ docker push your-dockerhub-username/bindbot:latest
 
 Deploy on RunPod with a compatible GPU (A100, H100, L40, L40S, RTX6000 Ada).
 
-Access JupyterLab on port 8888 and use `bindcraft-runpod-start.ipynb` to launch design jobs.
+Access JupyterLab on port 8888 and use `bindbot-start.ipynb` to launch design jobs.
 
 ## Credits
 

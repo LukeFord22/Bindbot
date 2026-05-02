@@ -42,7 +42,7 @@ RUN chmod +x install_bindcraft.sh && \
 
 # 10 Set permissions on startup script and notebook
 RUN chmod 755 /app/bindcraft/start.sh
-RUN chmod 644 /app/bindcraft/bindcraft-runpod-start.ipynb
+RUN chmod 644 /app/bindcraft/bindbot-start.ipynb
 
 # 11-12 Environment variables for JAX / CUDA
 ENV XLA_PYTHON_CLIENT_MEM_FRACTION=0.8
